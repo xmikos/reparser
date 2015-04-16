@@ -11,7 +11,10 @@ Requirements
 Usage
 -----
 
+Example:
+
 ```
+from pprint import pprint
 from reparser import Parser, Token, MatchGroup
 
 markdown_re = r'(^|\s)(?P<start>{tag})(?P<text>\S.+?\S)(?P<end>{tag})(\s|$)'
@@ -32,9 +35,25 @@ tokens = [
 ]
 
 parser = Parser(tokens)
-
-text = ('Hello **bold** world!\n
-        'You can *try* this [link](https://www.eff.org).')
+text = ('Hello **bold** world!\n'
+        'You can **try *this* awesome** [link](https://www.eff.org).')
 
 segments = parser.parse(text)
+pprint([(segment.text, segment.params) for segment in segments])
+```
+
+Output:
+
+```
+[('Hello ', {}),
+ ('bold', {'is_bold': True}),
+ (' world!', {}),
+ ('\n', {'segment_type': 'LINE_BREAK'}),
+ ('You can ', {}),
+ ('try ', {'is_bold': True}),
+ ('this', {'is_bold': True, 'is_italic': True}),
+ (' awesome', {'is_bold': True}),
+ (' ', {}),
+ ('link', {'link_target': 'https://www.eff.org'}),
+ ('.', {})]
 ```
