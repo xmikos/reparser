@@ -28,6 +28,7 @@ tokens = [
     Token(markdown_re.format(tag=r'~~'), is_strikethrough=True),
     Token(markdown_re.format(tag=r'=='), is_underline=True),
     Token(markdown_link_re, link_target=MatchGroup('url')),
+    Token(newline_re, segment_type='LINE_BREAK')
 ]
 
 parser = Parser(tokens)
