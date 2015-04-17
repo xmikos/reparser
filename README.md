@@ -66,8 +66,8 @@ Output:
  ('.', {})]
 ```
 
-Limitations:
-============
+Limitations
+-----------
 
 Nested tags are supported only partially. Order of tokens is significant.
 
