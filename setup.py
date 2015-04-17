@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(name='ReParser',
-      version='1.0',
+      version='1.1',
       description='Simple regex-based lexer/parser for inline markup',
       author='Michal Krenek (Mikos)',
       author_email='m.krenek@gmail.com',
