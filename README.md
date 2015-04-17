@@ -65,3 +65,22 @@ Output:
  ('link', {'link_target': 'http://www.eff.org'}),
  ('.', {})]
 ```
+
+Limitations:
+============
+
+Nested tags are supported only partially. Order of tokens is significant.
+In the example above, `**some *nested* text**` would be parsed to:
+
+    [('some ', {'is_bold': True}),
+     ('nested', {'is_bold': True, 'is_italic': True}),
+     (' text', {'is_bold': True})]
+
+But `*some **nested** text*` would be instead parsed to:
+
+    [('*some ', {}),
+     ('nested', {'is_bold': True}),
+     (' text*', {})]
+
+This is because `**` token is specified before `*` token and therefore
+parsed first. This behavior may change in the future.
