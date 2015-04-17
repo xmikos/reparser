@@ -39,7 +39,7 @@ tokens = [
     Token(markdown.format(tag=r'~~'), is_strikethrough=True),
     Token(markdown.format(tag=r'=='), is_underline=True),
     Token(markdown_link, link_target=MatchGroup('url', func=url_complete)),
-    Token(newline, segment_type='LINE_BREAK')
+    Token(newline, text='\n', segment_type='LINE_BREAK')
 ]
 
 parser = Parser(tokens)

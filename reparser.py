@@ -7,23 +7,27 @@ class Segment:
         self.text = text
         self.params = params
         if match:
+            self.update_text(match)
             self.update_params(match)
+
+    def update_text(self, match):
+        """Update text from results of regex match"""
+        if isinstance(self.text, MatchGroup):
+            self.text = self.text.get_group_value(match)
 
     def update_params(self, match):
         """Update dict of params from results of regex match"""
         for k, v in self.params.items():
             if isinstance(v, MatchGroup):
-                try:
-                    value = match.group(v.group)
-                except IndexError:
-                    value = ''
-                self.params[k] = v.func(value) if callable(v.func) else value
+                self.params[k] = v.get_group_value(match)
 
 
 class Token:
     """Definition of token which should be parsed from text"""
-    def __init__(self, pattern, text_group='text', start_group='start', end_group='end', **params):
+    def __init__(self, pattern, text=None, text_group='text',
+                 start_group='start', end_group='end', **params):
         self.regex = re.compile(pattern, re.DOTALL)
+        self.text = text
         self.params = params
         self.text_group = text_group
         self.start_group = start_group
@@ -35,6 +39,14 @@ class MatchGroup:
     def __init__(self, group, func=None):
         self.group = group
         self.func = func
+
+    def get_group_value(self, match):
+        """Return value of regex match for the specified group"""
+        try:
+            value = match.group(self.group)
+        except IndexError:
+            value = ''
+        return self.func(value) if callable(self.func) else value
 
 
 class Parser:
@@ -50,7 +62,6 @@ class Parser:
         """Find tokens in Segment"""
         segment_list = []
         last_pos = 0
-
         for match in token.regex.finditer(segment.text):
             # Append previous (non-matched) text
             try:
@@ -62,9 +73,10 @@ class Parser:
                 segment_list.append(Segment(segment.text[last_pos:start_pos], **segment.params))
 
             # Append matched text
+            text = token.text if token.text is not None else match.group(token.text_group)
             params = segment.params.copy()
             params.update(token.params)
-            segment_list.append(Segment(match.group(token.text_group), match=match, **params))
+            segment_list.append(Segment(text, match=match, **params))
 
             # Move last position pointer after matched text
             try:
