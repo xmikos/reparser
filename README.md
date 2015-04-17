@@ -70,6 +70,7 @@ Limitations:
 ============
 
 Nested tags are supported only partially. Order of tokens is significant.
+
 In the example above, `**some *nested* text**` would be parsed to:
 
     [('some ', {'is_bold': True}),
