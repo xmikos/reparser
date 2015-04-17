@@ -10,13 +10,14 @@ class Segment:
             self.update_params(match)
 
     def update_params(self, match):
-        """Update dict of params from regex match"""
+        """Update dict of params from results of regex match"""
         for k, v in self.params.items():
             if isinstance(v, MatchGroup):
                 try:
-                    self.params[k] = match.group(v.group)
+                    value = match.group(v.group)
                 except IndexError:
-                    self.params[k] = ''
+                    value = ''
+                self.params[k] = v.func(value) if callable(v.func) else value
 
 
 class Token:
@@ -31,8 +32,9 @@ class Token:
 
 class MatchGroup:
     """Name of regex group which should be replaced by its value when token is parsed"""
-    def __init__(self, group):
+    def __init__(self, group, func=None):
         self.group = group
+        self.func = func
 
 
 class Parser:
