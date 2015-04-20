@@ -21,7 +21,7 @@ Example::
     b_left = r'(?:(?<=[' + boundary_chars + r'])|(?<=^))' # Lookbehind
     b_right = r'(?:(?=[' + boundary_chars + r'])|(?=$))' # Lookahead
 
-    markdown = b_left + r'(?P<start>{tag})(?P<text>\S.+?\S)(?P<end>{tag})' + b_right
+    markdown = b_left + r'(?P<start>{tag})(?!{tag})(?P<text>(?:\S.+?\S|\S+))(?<!{tag})(?P<end>{tag})' + b_right
     markdown_link = r'(?P<start>\[)(?P<text>.+?)\]\((?P<url>.+?)(?P<end>\))'
     newline = r'(?P<text>\n|\r\n)'
 
@@ -37,8 +37,8 @@ Example::
         Token(markdown.format(tag=r'_'), is_italic=True),
         Token(markdown.format(tag=r'~~'), is_strikethrough=True),
         Token(markdown.format(tag=r'=='), is_underline=True),
-        Token(markdown_link, link_target=MatchGroup('url', func=url_complete)),
-        Token(newline, text='\n', segment_type='LINE_BREAK')
+        Token(markdown_link, final=True, link_target=MatchGroup('url', func=url_complete)),
+        Token(newline, final=True, text='\n', segment_type='LINE_BREAK')
     ]
 
     parser = Parser(tokens)
