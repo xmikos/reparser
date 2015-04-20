@@ -1,7 +1,7 @@
 # Maintainer: Michal Krenek (Mikos) <m.krenek@gmail.com>
 pkgname=python-reparser
 _pkgname=reparser
-pkgver=1.2.1
+pkgver=1.3
 pkgrel=1
 pkgdesc="Simple regex-based lexer/parser for inline markup"
 arch=('any')
