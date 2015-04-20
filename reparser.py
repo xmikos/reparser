@@ -35,7 +35,6 @@ class Token:
         self.start_group = start_group
         self.end_group = end_group
 
-
     def find(self, segment):
         """Find this token in Segment"""
         segment_list = []
