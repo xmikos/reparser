@@ -71,6 +71,7 @@ class Parser:
     def __init__(self, tokens):
         self.tokens = tokens
         self.regex = self.build_regex(tokens)
+        self.groups = self.build_groups(tokens)
 
     def preprocess(self, text):
         """Preprocess text before parsing (should be reimplemented by subclass)"""
@@ -89,18 +90,23 @@ class Parser:
                 patterns.append(token.pattern_end)
         return re.compile('|'.join(patterns), re.DOTALL)
 
-    def get_matched(self, match):
+    def build_groups(self, tokens):
+        """Build dict of groups from list of tokens"""
+        groups = {}
+        for token in tokens:
+            match_type = MatchType.start if token.group_end else MatchType.single
+            groups[token.group_start] = (token, match_type)
+            if token.group_end:
+                groups[token.group_end] = (token, MatchType.end)
+        return groups
+
+    def get_matched_token(self, match):
         """Find which token has been matched by compound regex"""
-        for token in self.tokens:
-            if match.group(token.group_start) is not None:
-                match_type = MatchType.start if token.group_end else MatchType.single
-                group = token.group_start
-                break
-            elif token.group_end and match.group(token.group_end) is not None:
-                match_type = MatchType.end
-                group = token.group_end
-                break
-        return (token, match_type, group)
+        match_groupdict = match.groupdict()
+        for group in self.groups:
+            if match_groupdict[group] is not None:
+                token, match_type = self.groups[group]
+                return (token, match_type, group)
 
     def get_params(self, token_stack):
         """Get params from stack of tokens"""
@@ -129,7 +135,7 @@ class Parser:
         # Iterate through all matched tokens
         for match in self.regex.finditer(text):
             # Find which token has been matched by regex
-            token, match_type, group = self.get_matched(match)
+            token, match_type, group = self.get_matched_token(match)
 
             # Get params from stack of tokens
             params = self.get_params(token_stack)
