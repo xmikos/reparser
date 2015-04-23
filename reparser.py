@@ -123,7 +123,6 @@ class Parser:
     def parse(self, text):
         """Parse text to obtain list of Segments"""
         text = self.preprocess(text)
-        segment_list = []
         token_stack = []
         last_pos = 0
 
@@ -151,7 +150,7 @@ class Parser:
                 # Append text preceding matched token
                 start_pos = match.start(group)
                 if start_pos > last_pos:
-                    segment_list.append(Segment(self.postprocess(text[last_pos:start_pos]), **params))
+                    yield Segment(self.postprocess(text[last_pos:start_pos]), **params)
 
                 # Actions specific for start token or single token
                 if match_type == MatchType.start:
@@ -160,7 +159,7 @@ class Parser:
                     single_params = params.copy()
                     single_params.update(token.params)
                     single_text = token.text if token.text is not None else match.group(group)
-                    segment_list.append(Segment(single_text, token=token, match=match, **single_params))
+                    yield Segment(single_text, token=token, match=match, **single_params)
 
                 # Move last position pointer to the end of matched token
                 last_pos = match.end(group)
@@ -168,6 +167,4 @@ class Parser:
         # Append anything that's left
         if last_pos < len(text):
             params = self.get_params(token_stack)
-            segment_list.append(Segment(self.postprocess(text[last_pos:]), **params))
-
-        return segment_list
+            yield Segment(self.postprocess(text[last_pos:]), **params)
