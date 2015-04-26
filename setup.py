@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name="ReParser",
-    version="1.4.1",
+    version="1.4.2",
     description="Simple regex-based lexer/parser for inline markup",
     author="Michal Krenek (Mikos)",
     author_email="m.krenek@gmail.com",
