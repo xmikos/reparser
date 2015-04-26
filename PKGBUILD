@@ -8,6 +8,7 @@ arch=('any')
 url="https://github.com/xmikos/reparser"
 license=('MIT')
 depends=('python')
+makedepends=('python-setuptools')
 source=(https://github.com/xmikos/reparser/archive/v$pkgver.tar.gz)
 
 build() {
