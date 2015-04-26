@@ -18,6 +18,7 @@ build() {
 
 package() {
   cd "$srcdir/${_pkgname}-$pkgver"
+  sed -i 's/^.*enum34.*$//' setup.py
   python setup.py install --root="$pkgdir"
 }
 
