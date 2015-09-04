@@ -1,7 +1,7 @@
 # Maintainer: Michal Krenek (Mikos) <m.krenek@gmail.com>
 pkgname=python-reparser
 _pkgname=reparser
-pkgver=1.4.2
+pkgver=1.4.3
 pkgrel=1
 pkgdesc="Simple regex-based lexer/parser for inline markup"
 arch=('any')
@@ -18,7 +18,6 @@ build() {
 
 package() {
   cd "$srcdir/${_pkgname}-$pkgver"
-  sed -i 's/^.*enum34.*$//' setup.py
   python setup.py install --root="$pkgdir"
 }
 

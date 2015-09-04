@@ -10,7 +10,7 @@ if sys.version_info < (3, 4):
 
 setup(
     name="ReParser",
-    version="1.4.2",
+    version="1.4.3",
     description="Simple regex-based lexer/parser for inline markup",
     author="Michal Krenek (Mikos)",
     author_email="m.krenek@gmail.com",
