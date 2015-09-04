@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 
+import sys
+
 from setuptools import setup
+
+install_requires = []
+if sys.version_info < (3, 4):
+    install_requires.append('enum34')
 
 setup(
     name="ReParser",
@@ -11,9 +17,7 @@ setup(
     url="https://github.com/xmikos/reparser",
     license="MIT",
     py_modules=["reparser"],
-    install_requires=[
-        "enum34"  # Only needed for backward compatibility with Python < 3.4
-    ],
+    install_requires=install_requires,
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
